@@ -1,6 +1,8 @@
 # Pagelib
 Pagelib turns nasty HTML strings into friendly HTML objects.
 
+Pagelib is currently underdevelopment and is not ready for production or development environments.
+
 ## Quickstart
 ```
 from pagelib import HtmlPage
