@@ -75,3 +75,6 @@ def test_text_is_str(html_page):
 def test_text_length(html_page):
     assert len(html_page.text) == 16599
 
+
+def test_size(html_page):
+    assert html_page.size == 48186
