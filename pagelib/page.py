@@ -5,6 +5,7 @@ import polyglot.text
 import re
 import parsel
 import selectolax.parser
+import sys
 
 
 class HtmlPage:
@@ -12,6 +13,16 @@ class HtmlPage:
         self.html = html
         self.selector = parsel.Selector(text=self.html)
         self.alpha_numeric_regex = re.compile('[\W_]+', re.UNICODE)
+
+    def __str__(self):
+        return self.title or ''
+
+    def __repr__(self):
+        return 'HtmlPage(title={}, bytes={})'.format(self.title, self.bytes)
+
+    @property
+    def bytes(self):
+        return self._get_byte_size()
 
     @property
     def meta_keywords(self):
@@ -73,6 +84,14 @@ class HtmlPage:
                 pass
         return None
 
+    def _get_byte_size(self):
+        """
+        Return size of HTML page in bytes.
+
+        returns: int
+        """
+        return sys.getsizeof(self.html)
+
     def _get_meta_keywords(self):
         """
         Return content of meta keywords tag.
@@ -102,6 +121,7 @@ class HtmlPage:
         returns: str or None
         """
         xpaths = [
+            '//title/text()',
             '//meta[@property="og:title"]/@content'
         ]
         return self._match_first_xpath(xpaths)
