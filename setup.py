@@ -24,10 +24,8 @@ setuptools.setup(
                 'Topic :: Software Development :: Libraries',
                 ],
     install_requires=[
-        'gensim',
         'morfessor',
         'numpy',
-        'paramiko',
         'parsel',
         'polyglot',
         'pycld2',

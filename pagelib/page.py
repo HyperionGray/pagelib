@@ -1,29 +1,16 @@
 """
 HTML Page module.
 """
-import gensim
-import polyglot
-#import nltk
+import polyglot.text
 import re
 import parsel
-#import selectolax.parser
-
-from gensim import corpora
-
-# Download lib dependencies
-#nltk.download('wordnet')
-#nltk.download('stopwords')
-#spacy.load('en')
-#from spacy.lang.en import English
-#from nltk.corpus import wordnet as wn
-#from nltk.stem.wordnet import WordNetLemmatizer
-#EN_STOP = set(nltk.corpus.stopwords.words('english'))
+import selectolax.parser
 
 
 class HtmlPage:
     def __init__(self, html):
         self.html = html
-        self.sel = parsel.Selector(text=html)
+        self.selector = parsel.Selector(text=self.html)
         self.alpha_numeric_regex = re.compile('[\W_]+', re.UNICODE)
 
     @property
@@ -32,19 +19,15 @@ class HtmlPage:
 
     @property
     def docx(self):
-        return polyglot.Text(self.text)
+        return polyglot.text.Text(self.text)
 
     @property
     def meta_description(self):
         return self._get_meta_description()
 
     @property
-    def meta_title(self):
-        return self._get_meta_title()
-
-    @property
-    def meta_title(self):
-        return self._get_meta_title()
+    def title(self):
+        return self._get_title()
 
     @property
     def text(self):
@@ -55,30 +38,26 @@ class HtmlPage:
         return self._get_keywords()
 
     @property
-    def language(self):
-        return self._get_language()
+    def language_code(self):
+        return self._get_language_code()
 
     @property
     def language_name(self):
         return self._get_language_name()
 
-    @property
-    def lda_tokens(self):
-        return self._lda_tokenize()
+    #@property
+    #def lda_tokens(self):
+    #    return self._lda_tokenize()
 
     @property
-    def word_tokens(self):
+    def words(self):
         return self._word_tokenize()
 
     @property
-    def sentence_tokens(self):
+    def sentences(self):
         return self._sentence_tokenize()
 
-    def _get_meta_keywords(self):
-        # TODO
-        return None
-
-    def _match_first_xpath(xpaths):
+    def _match_first_xpath(self, xpaths):
         """
         Return first matching xpath from `xpaths`.
 
@@ -88,24 +67,51 @@ class HtmlPage:
         """
         for xpath in xpaths:
             try:
-                return self.sel.xpath(xpath).extract()[0]
+                #return self.sel.xpath(xpath).extract()[0]
+                return self.selector.xpath(xpath).extract()[0]
             except IndexError:
                 pass
         return None
 
+    def _get_meta_keywords(self):
+        """
+        Return content of meta keywords tag.
+
+        :returns: str or None
+        """
+        xpaths = [
+            '//meta[@name="keywords"]/@content'
+        ]
+        return self._match_first_xpath(xpaths)
+
     def _get_meta_description(self):
+        """
+        Return content of meta description tag.
+
+        returns: str or None
+        """
         xpaths = [
             '//meta[@property="og:description"]/@content'
         ]
         return self._match_first_xpath(xpaths)
 
-    def _get_meta_title(self):
+    def _get_title(self):
+        """
+        Return title of page.
+
+        returns: str or None
+        """
         xpaths = [
             '//meta[@property="og:title"]/@content'
         ]
         return self._match_first_xpath(xpaths)
 
     def _get_text(self):
+        """
+        Return text of page.
+
+        returns: str
+        """
         tree = selectolax.parser.HTMLParser(self.html)
 
         if tree.body is None:
@@ -117,23 +123,22 @@ class HtmlPage:
         text = tree.body.text(separator='\n')
         return text
 
-    def _get_keywords(self):
-        keywords = gensim.summarization.keywords(self.text).split('\n')
-        return keywords
-
-    def _get_language(self):
-        try:
-            return langdetect.detect(self.text)
-        except langdetect.lang_detect_exception.LangDetectException:
-            return None
-
     def _get_language_code(self):
-       return self.docx.language.code
+        """
+        Return language code of page.
+        """
+        return self.docx.language.code
 
     def _get_language_name(self):
+        """
+        Return language name of page.
+        """
         return self.docx.language.name
 
     def _word_tokenize(self):
+        """
+        Return word tokens from text of page.
+        """
         tokens = []
         for token in self.docx.words:
             if len(token) == 1:
@@ -143,6 +148,9 @@ class HtmlPage:
         return tokens
 
     def _sentence_tokenize(self):
+        """
+        Return sentence tokens from text of page.
+        """
         return self.docx.sentences
 
     # def _lda_tokenize(self):

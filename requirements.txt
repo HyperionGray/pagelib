@@ -1,2 +1,6 @@
-tox
+parsel
+polyglot
 pytest
+numpy
+selectolax
+tox
