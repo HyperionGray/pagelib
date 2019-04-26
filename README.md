@@ -26,7 +26,7 @@ Components of the page can be accessed through it's properties:
 'Hello, world!'
 ```
 
-Pagelib exposes a (Parsel)[https://github.com/scrapy/parsel] selector that can be used to extract further elements from the page:
+Pagelib exposes a [parsel](https://github.com/scrapy/parsel) selector that can be used to extract further elements from the page using xpaths or css:
 ```
 >>> page.selector.xpath('//p/text()').extract()
 ['Hello, world!']
