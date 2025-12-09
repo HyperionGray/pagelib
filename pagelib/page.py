@@ -12,7 +12,7 @@ class HtmlPage:
     def __init__(self, html):
         self.html = html
         self.selector = parsel.Selector(text=self.html)
-        self.alpha_numeric_regex = re.compile('[\W_]+', re.UNICODE)
+        self.alpha_numeric_regex = re.compile(r'[\W_]+', re.UNICODE)
 
     def __str__(self):
         return self.title or ''
@@ -56,10 +56,6 @@ class HtmlPage:
     def language_name(self):
         return self._get_language_name()
 
-    #@property
-    #def lda_tokens(self):
-    #    return self._lda_tokenize()
-
     @property
     def words(self):
         return self._word_tokenize()
@@ -78,7 +74,6 @@ class HtmlPage:
         """
         for xpath in xpaths:
             try:
-                #return self.sel.xpath(xpath).extract()[0]
                 return self.selector.xpath(xpath).extract()[0]
             except IndexError:
                 pass
@@ -172,35 +167,3 @@ class HtmlPage:
         Return sentence tokens from text of page.
         """
         return self.docx.sentences
-
-    # def _lda_tokenize(self):
-    #     lda_tokens = []
-    #     parser = English()
-    #     tokens = parser(self.text)
-    #     for token in tokens:
-    #         if token.orth_.isspace():
-    #             continue
-    #         elif token.like_url:
-    #             lda_tokens.append('URL')
-    #         elif token.orth_.startswith('@'):
-    #             lda_tokens.append('SCREEN_NAME')
-    #         else:
-    #             lda_tokens.append(token.lower_)
-    #     return lda_tokens
-
-    #def _get_lemma(self, word):
-    #    lemma = wn.morphy(word)
-    #    if lemma is None:
-    #        return word
-    #    else:
-    #        return lemma
-
-    #def _get_lemma2(self, word):
-    #    return wordNetLemmatizer().lemmatize(word)
-
-    #def _prepare_text_for_lda(self, text):
-    #    tokens = self._lda_tokenize(text)
-    #    tokens = [token for token in tokens if len(token) > 4]
-    #    tokens = [token for token in tokens if token not in EN_STOP]
-    #    tokens = [self._get_lemma(token) for token in tokens]
-    #    return tokens

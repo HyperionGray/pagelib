@@ -20,7 +20,7 @@ Components of the page can be accessed through it's properties:
 'Some page you've downloaded from the web and now have to parse.'
 >>> page.language_code
 'en'
->>> page.language
+>>> page.language_name
 'English'
 >>> page.text
 'Hello, world!'
