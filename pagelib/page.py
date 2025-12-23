@@ -12,7 +12,7 @@ class HtmlPage:
     def __init__(self, html):
         self.html = html
         self.selector = parsel.Selector(text=self.html)
-        self.alpha_numeric_regex = re.compile('[\W_]+', re.UNICODE)
+        self.alpha_numeric_regex = re.compile(r'[\W_]+', re.UNICODE)
 
     def __str__(self):
         return self.title or ''
