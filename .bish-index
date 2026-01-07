@@ -1,0 +1,6 @@
+./pagelib/page.py
+./pagelib/__init__.py
+./setup.py
+./AGENTS.md
+./README.md
+./tests/test_html_page.py
